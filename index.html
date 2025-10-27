@@ -2,85 +2,85 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<title>AnimX — Lightweight Animation Engine & Builder</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Reveal Builder — Lightweight Animation Engine</title>
 <style>
   :root{
     --bg:#0b1220;--panel:#141c2b;--muted:#9fb0c7;--text:#e6edf6;
     --accent:#22c55e;--accent2:#3b82f6;--border:#243047;--code:#0b1220;
   }
   *{box-sizing:border-box}
-  body{margin:0; background:var(--bg); color:var(--text); font-family:ui-sans-serif,system-ui,Segoe UI,Roboto,Inter,Arial}
-  .layout{display:flex; min-height:100vh}
-  aside{width:340px; background:var(--panel); border-right:1px solid var(--border); padding:22px; display:flex; flex-direction:column; gap:16px}
-  h1{margin:0 0 8px; font-size:18px; color:var(--muted); font-weight:700; letter-spacing:.3px}
-  .group{display:grid; gap:8px}
-  label{font-size:12px; color:#c7d3e5; font-weight:600}
-  input,select,textarea{
-    background:#101829; color:var(--text); border:1px solid var(--border);
-    border-radius:8px; padding:10px 12px; font-size:14px; outline:none;
+  body{margin:0;background:var(--bg);color:var(--text);font-family:ui-sans-serif,system-ui,Segoe UI,Roboto,Inter,Arial}
+  .layout{display:flex;min-height:100vh}
+  aside{width:400px;background:var(--panel);border-right:1px solid var(--border);padding:22px;display:flex;flex-direction:column;gap:16px}
+  h1{margin:0 0 8px;font-size:18px;color:var(--muted);font-weight:700;letter-spacing:.3px}
+  .group{display:grid;gap:8px}
+  label{font-size:12px;color:#c7d3e5;font-weight:600}
+  select,input,textarea{
+    background:#101829;color:var(--text);border:1px solid var(--border);
+    border-radius:8px;padding:10px 12px;font-size:14px;outline:none
   }
   input[type="number"]{appearance:textfield}
-  .row{display:grid; grid-template-columns:1fr 1fr; gap:8px}
-  .actions{display:grid; gap:8px; margin-top:6px}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .actions{display:grid;gap:8px;margin-top:6px}
   button{
-    background:var(--accent); color:#08111f; font-weight:800; border:0; padding:10px 12px;
-    border-radius:9px; cursor:pointer; transition:transform .06s ease, opacity .2s ease
+    background:var(--accent);color:#08111f;font-weight:800;border:0;padding:10px 12px;
+    border-radius:9px;cursor:pointer;transition:transform .06s ease,opacity .2s ease
   }
   button:hover{opacity:.95} button:active{transform:translateY(1px)}
-  .btn-outline{background:transparent; color:var(--text); border:1px solid var(--border)}
-  .btn-blue{background:var(--accent2); color:white}
-  main{flex:1; display:flex; align-items:center; justify-content:center; padding:28px}
+  .is-outline{background:transparent;color:var(--text);border:1px solid var(--border)}
+  .is-blue{background:var(--accent2);color:#fff}
+  main{flex:1;display:flex;align-items:center;justify-content:center;padding:28px}
   .preview{
-    width:min(840px,100%); background:var(--panel); border:1px solid var(--border); border-radius:16px;
-    padding:28px; min-height:320px; box-shadow:0 10px 30px rgba(0,0,0,.25)
+    width:min(920px,100%);background:var(--panel);border:1px solid var(--border);border-radius:16px;
+    padding:32px;min-height:300px;box-shadow:0 10px 30px rgba(0,0,0,.25)
   }
-  .preview h2{margin:0 0 16px; color:#cfe0ff; font-size:16px; opacity:.9}
-  .stage{display:flex; flex-direction:column; gap:16px}
-  .stage .box{
-    background:#0e1729; border:1px dashed #2b3a57; color:#cfe0ff; padding:18px; border-radius:12px;
+  .preview h2{margin:0 0 16px;color:#cfe0ff;font-size:16px;opacity:.9}
+  .preview-text{
+    background:#0e1729;border:1px dashed #2b3a57;color:#cfe0ff;padding:24px;border-radius:12px;
+    font-size:2.25rem;line-height:1.25;letter-spacing:.2px
   }
-  .grid{display:grid; grid-template-columns:repeat(3,1fr); gap:10px}
-  .tr-word,.tr-char{opacity:0; display:inline-block}
+
   /* modal */
-  .modal{position:fixed; inset:0; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,.6); padding:20px; z-index:10}
-  .sheet{width:min(920px,100%); background:var(--panel); border:1px solid var(--border); border-radius:14px; padding:18px}
-  .tabs{display:flex; gap:16px; border-bottom:1px solid var(--border); margin-bottom:10px}
-  .tab{padding:8px 2px; cursor:pointer; color:#b7c6da; font-weight:700}
-  .tab.active{color:var(--accent); border-bottom:2px solid var(--accent)}
-  pre{background:var(--code); color:#d0e2ff; border:1px solid var(--border); border-radius:10px; padding:12px; overflow:auto; font-size:13px; line-height:1.5}
-  .toolbar{display:flex; gap:8px; justify-content:flex-end; margin:8px 0 14px}
-  .badge{display:inline-flex; gap:8px; align-items:center; font-size:12px; color:#9fb0c7}
-  code.inline{background:#0e1628; border:1px solid var(--border); padding:1px 6px; border-radius:6px}
+  .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.6);padding:20px;z-index:10}
+  .sheet{width:min(980px,100%);background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:18px}
+  .tabs{display:flex;gap:16px;border-bottom:1px solid var(--border);margin-bottom:10px}
+  .tab{padding:8px 2px;cursor:pointer;color:#b7c6da;font-weight:700}
+  .tab.is-active{color:var(--accent);border-bottom:2px solid var(--accent)}
+  pre{background:var(--code);color:#d0e2ff;border:1px solid var(--border);border-radius:10px;padding:12px;overflow:auto;font-size:13px;line-height:1.5;max-height:60vh}
+  .toolbar{display:flex;gap:8px;justify-content:flex-end;margin:8px 0 14px}
+  .badge{display:inline-flex;gap:8px;align-items:center;font-size:12px;color:#9fb0c7}
+  code.inline{background:#0e1628;border:1px solid var(--border);padding:1px 6px;border-radius:6px}
 </style>
 </head>
 <body>
   <div class="layout">
     <aside>
       <div>
-        <h1>AnimX — Builder</h1>
+        <h1>Reveal — Builder</h1>
+
         <div class="group">
           <label>Animation Type</label>
-          <select id="animType">
-            <option>fade</option>
-            <option>slide</option>
-            <option>scale</option>
-            <option>rotate</option>
-            <option>bounce</option>
-            <option>blurIn</option>
-            <option>clipWipe</option>
-            <option>underlineGrow</option>
-            <option>shineSweep</option>
-            <option>desaturateIn</option>
-            <option>typewriter</option>
-            <option>scramble</option>
+          <select class="js-animType">
+            <option value="fade">fade</option>
+            <option value="slide">slide</option>
+            <option value="scale">scale</option>
+            <option value="rotate">rotate</option>
+            <option value="bounce">bounce</option>
+            <option value="blur">blur</option>
+            <option value="clip">clip</option>
+            <option value="underline">underline</option>
+            <option value="shine">shine</option>
+            <option value="desat">desat</option>
+            <option value="type">type</option>
+            <option value="scramble">scramble</option>
           </select>
         </div>
 
         <div class="row">
           <div class="group">
             <label>Mode</label>
-            <select id="unitMode">
+            <select class="js-mode">
               <option value="element">element</option>
               <option value="word" selected>word</option>
               <option value="char">char</option>
@@ -88,8 +88,9 @@
           </div>
           <div class="group">
             <label>Direction</label>
-            <select id="direction">
-              <option>up</option><option>down</option><option>left</option><option>right</option>
+            <select class="js-direction">
+              <option value="up">up</option><option value="down">down</option>
+              <option value="left">left</option><option value="right">right</option>
             </select>
           </div>
         </div>
@@ -97,18 +98,18 @@
         <div class="row">
           <div class="group">
             <label>Duration (ms)</label>
-            <input id="duration" type="number" min="60" max="5000" value="600" />
+            <input class="js-duration" type="number" min="60" max="8000" value="700" />
           </div>
           <div class="group">
             <label>Stagger (ms)</label>
-            <input id="stagger" type="number" min="0" max="1500" value="100" />
+            <input class="js-stagger" type="number" min="0" max="1500" value="90" />
           </div>
         </div>
 
         <div class="row">
           <div class="group">
             <label>Easing (CSS)</label>
-            <select id="ease">
+            <select class="js-ease">
               <option>ease-out</option><option>ease-in</option><option>ease-in-out</option><option>linear</option>
               <option value="cubic-bezier(0.16, 1, 0.3, 1)">springy</option>
               <option value="cubic-bezier(0.22, 1, 0.36, 1)">expo-out</option>
@@ -116,480 +117,418 @@
           </div>
           <div class="group">
             <label>Amount (px/deg/%)*</label>
-            <input id="amount" type="number" value="80" />
+            <input class="js-amount" type="number" value="80" />
           </div>
         </div>
 
         <div class="row">
           <div class="group">
             <label>Stagger Pattern</label>
-            <select id="pattern">
-              <option>sequential</option>
-              <option>reverse</option>
-              <option>centerOut</option>
-              <option>edgesIn</option>
-              <option>random</option>
-              <option>gridDiagonal</option>
+            <select class="js-pattern">
+              <option value="sequential">sequential</option>
+              <option value="reverse">reverse</option>
+              <option value="centerOut">centerOut</option>
+              <option value="random">random</option>
             </select>
           </div>
-          <div class="group">
-            <label>Grid Columns (for gridDiagonal)</label>
-            <input id="gridCols" type="number" value="3" />
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="group">
-            <label>Scroll Trigger</label>
-            <select id="trigger">
-              <option value="none">none</option>
-              <option value="enterOnce">enterOnce</option>
-              <option value="enterEvery">enterEvery</option>
-            </select>
-          </div>
-          <div class="group">
-            <label>Root Margin</label>
-            <input id="rootMargin" type="text" value="0px 0px -10% 0px" />
-          </div>
-        </div>
-
-        <div class="row">
           <div class="group">
             <label>Exit Animation</label>
-            <select id="exitType">
+            <select class="js-exit">
               <option value="none">none</option>
-              <option>fadeOut</option>
-              <option>slideOut</option>
-              <option>shrinkOut</option>
-              <option>dissolveOut</option>
+              <option value="fadeOut">fadeOut</option>
+              <option value="slideOut">slideOut</option>
+              <option value="shrinkOut">shrinkOut</option>
+              <option value="dissolveOut">dissolveOut</option>
             </select>
-          </div>
-          <div class="group">
-            <label>Exit Delay (ms)</label>
-            <input id="exitDelay" type="number" value="0" />
           </div>
         </div>
 
         <div class="group">
-          <label>Custom Text (for preview)</label>
-          <textarea id="customText" rows="2">Building lightweight animation libraries is fun and fast</textarea>
+          <label>Exit Delay (ms)</label>
+          <input class="js-exitDelay" type="number" value="0" />
+        </div>
+
+        <div class="group">
+          <label>Preview Text</label>
+          <textarea class="js-text" rows="2">Building lightweight animation libraries is fun and fast</textarea>
         </div>
 
         <div class="actions">
-          <button id="previewBtn" class="btn-outline">Preview</button>
-          <button id="generateBtn" class="btn-blue">Generate Code</button>
+          <button class="js-preview is-outline">Preview</button>
+          <button class="js-generate is-blue">Generate Code</button>
         </div>
       </div>
 
       <div class="badge">
-        <span>Engine: <code class="inline">AnimX</code> · No deps · Vanilla JS</span>
+        <span>Engine: <code class="inline">reveal</code> · No deps · Vanilla JS</span>
       </div>
     </aside>
 
     <main>
       <div class="preview">
         <h2>Preview</h2>
-        <div id="stage" class="stage">
-          <div class="box" id="demoText">Building lightweight animation libraries is fun and fast</div>
-          <div class="grid" id="demoGrid">
-            <div class="box">Card One</div>
-            <div class="box">Card Two</div>
-            <div class="box">Card Three</div>
-          </div>
+        <div class="preview-text js-previewText">
+          Building lightweight animation libraries is fun and fast
         </div>
       </div>
     </main>
   </div>
 
   <!-- Modal -->
-  <div id="modal" class="modal" role="dialog" aria-modal="true">
+  <div class="modal js-modal" role="dialog" aria-modal="true">
     <div class="sheet">
       <div class="tabs">
-        <div class="tab active" data-tab="js">JS</div>
-        <div class="tab" data-tab="css">CSS</div>
-        <div class="tab" data-tab="how">How-to</div>
+        <div class="tab is-active js-tab" data-tab="js">JS</div>
+        <div class="tab js-tab" data-tab="css">CSS</div>
+        <div class="tab js-tab" data-tab="how">How-to</div>
       </div>
 
       <div class="toolbar">
-        <button id="copyBtn" class="btn-outline">Copy</button>
-        <button id="closeBtn" class="btn-outline">Close</button>
+        <button class="is-outline js-copy">Copy</button>
+        <button class="is-outline js-close">Close</button>
       </div>
 
-      <pre id="content"></pre>
+      <pre class="js-content"></pre>
     </div>
   </div>
 
-<script>
-/* =========================
-   AnimX — Lightweight Engine
-   ========================= */
-const AnimX = (() => {
-  const split = {
-    element: (el) => [el],
-    word: (el) => {
-      const words = el.textContent.trim().split(/\s+/);
-      el.innerHTML = words.map(w => `<span class="tr-word">${w}</span>`).join(' ');
-      return [...el.querySelectorAll('.tr-word')];
-    },
-    char: (el) => {
-      const chars = el.textContent.replace(/\s+/g,' ').split('');
-      el.innerHTML = chars.map(c => c === ' ' ? ' ' : `<span class="tr-char">${c}</span>`).join('');
-      return [...el.querySelectorAll('.tr-char')];
-    }
+  <script>
+  /* ================
+     Preview helpers
+     ================ */
+  const $ = (sel, root=document)=> root.querySelector(sel);
+  const $$ = (sel, root=document)=> Array.from(root.querySelectorAll(sel));
+
+  const ui = {
+    type: $('.js-animType'),
+    mode: $('.js-mode'),
+    direction: $('.js-direction'),
+    duration: $('.js-duration'),
+    stagger: $('.js-stagger'),
+    ease: $('.js-ease'),
+    amount: $('.js-amount'),
+    pattern: $('.js-pattern'),
+    exit: $('.js-exit'),
+    exitDelay: $('.js-exitDelay'),
+    text: $('.js-text'),
+    previewText: $('.js-previewText'),
+    btnPreview: $('.js-preview'),
+    btnGenerate: $('.js-generate'),
+    modal: $('.js-modal'),
+    modalContent: $('.js-content'),
+    modalCopy: $('.js-copy'),
+    modalClose: $('.js-close'),
+    modalTabs: $$('.js-tab')
   };
 
-  const orderers = {
-    sequential: (arr) => arr.map((_,i)=>i),
-    reverse: (arr) => arr.map((_,i)=>arr.length-1-i),
-    centerOut: (arr) => {
-      const n=arr.length, center=(n-1)/2;
-      return arr.map((_,i)=>[Math.abs(i-center), i]).sort((a,b)=>a[0]-b[0]).map((x)=>x[1]);
-    },
-    edgesIn: (arr) => {
-      const idx=[]; let l=0,r=arr.length-1;
-      while(l<=r){ idx.push(l), l++; if(l<=r) idx.push(r), r--; }
-      return idx;
-    },
-    random: (arr) => arr.map((_,i)=>i).sort(()=>Math.random()-0.5),
-    gridDiagonal: (arr, cols=3) => {
-      // assumes arr order is grid row-major
-      const coords = arr.map((_,i)=>({i, r:Math.floor(i/cols), c:i%cols}));
-      return coords.sort((a,b)=>(a.r+a.c)-(b.r+b.c)).map(v=>v.i);
+  function buildClassListFromUI(){
+    const cls = [];
+    // type
+    cls.push(`reveal-${ui.type.value}`);
+    // mode
+    if(ui.mode.value === 'word') cls.push('reveal-word');
+    else if(ui.mode.value === 'char') cls.push('reveal-char');
+    // direction
+    cls.push(`reveal-${ui.direction.value}`);
+    // pattern
+    if(ui.pattern.value === 'random') cls.push('reveal-random');
+    else if(ui.pattern.value === 'centerOut') cls.push('reveal-center');
+    // exit is not a class; provided as data attribute
+    return cls.join(' ');
+  }
+
+  function applyPreview(){
+    // set text
+    ui.previewText.textContent = ui.text.value;
+
+    // build class list
+    const classes = buildClassListFromUI();
+    ui.previewText.setAttribute('class', `preview-text js-previewText ${classes}`);
+
+    // set data overrides
+    ui.previewText.setAttribute('data-reveal-duration', ui.duration.value);
+    ui.previewText.setAttribute('data-reveal-stagger', ui.stagger.value);
+    ui.previewText.setAttribute('data-reveal-ease', ui.ease.value);
+    ui.previewText.setAttribute('data-reveal-amount', ui.amount.value);
+    ui.previewText.setAttribute('data-reveal-exit', ui.exit.value);
+    ui.previewText.setAttribute('data-reveal-exit-delay', ui.exitDelay.value);
+
+    // run preview using inline engine clone (minimal)
+    revealPreviewInit();
+  }
+
+  ui.btnPreview.addEventListener('click', applyPreview);
+  window.addEventListener('load', applyPreview);
+
+  /* ==================================================
+     Minimal inline engine for preview (no scroll trigger)
+     (The generated JS has the full engine; this is light)
+     ================================================== */
+  function revealPreviewInit(){
+    const qAll = (sel, root=document)=> Array.from(root.querySelectorAll(sel));
+    const set = (el, styles)=>{for(const k in styles) el.style[k]=styles[k]};
+    const px = n=> typeof n==='number'? `${n}px` : n;
+    const has = (el, c)=> el.classList.contains(c);
+
+    const splitters = {
+      element: el=>[el],
+      word: el=>{
+        const words = el.textContent.trim().split(/\s+/);
+        el.innerHTML = words.map(w=>`<span class="reveal-word">${w}</span>`).join(' ');
+        return qAll('.reveal-word', el);
+      },
+      char: el=>{
+        const chars = el.textContent.replace(/\s+/g,' ').split('');
+        el.innerHTML = chars.map(c=> c===' ' ? ' ' : `<span class="reveal-char">${c}</span>`).join('');
+        return qAll('.reveal-char', el);
+      }
+    };
+
+    function readConfig(el){
+      const type =
+        has(el,'reveal-fade') ? 'fade' :
+        has(el,'reveal-slide') ? 'slide' :
+        has(el,'reveal-scale') ? 'scale' :
+        has(el,'reveal-rotate')? 'rotate' :
+        has(el,'reveal-bounce')? 'bounce' :
+        has(el,'reveal-blur')  ? 'blur' :
+        has(el,'reveal-clip')  ? 'clip' :
+        has(el,'reveal-underline')? 'underline' :
+        has(el,'reveal-shine') ? 'shine' :
+        has(el,'reveal-desat') ? 'desat' :
+        has(el,'reveal-type')  ? 'type' :
+        has(el,'reveal-scramble') ? 'scramble' : 'fade';
+
+      const mode = has(el,'reveal-char') ? 'char' : has(el,'reveal-word') ? 'word' : 'element';
+      const direction = has(el,'reveal-down') ? 'down' : has(el,'reveal-left') ? 'left' : has(el,'reveal-right') ? 'right' : 'up';
+      const pattern = has(el,'reveal-center') ? 'centerOut' : has(el,'reveal-random') ? 'random' : 'sequential';
+
+      const num = (k, def)=> isNaN(+el.getAttribute(k)) ? def : +el.getAttribute(k);
+      const str = (k, def)=> el.getAttribute(k) ?? def;
+
+      return {
+        type, mode, direction, pattern,
+        duration: num('data-reveal-duration', 700),
+        stagger : num('data-reveal-stagger', 90),
+        ease    : str('data-reveal-ease', 'ease-out'),
+        amount  : num('data-reveal-amount', 80),
+        exit    : str('data-reveal-exit', 'none'),
+        exitDelay: num('data-reveal-exit-delay', 0)
+      };
     }
+
+    const orderers = {
+      sequential: arr=> arr.map((_,i)=>i),
+      random: arr=> arr.map((_,i)=>i).sort(()=>Math.random()-0.5),
+      centerOut: arr=>{
+        const n=arr.length, c=(n-1)/2;
+        return arr.map((_,i)=>[Math.abs(i-c),i]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]);
+      }
+    };
+
+    const FX = {
+      fade:{prep:(el,c)=>set(el,{opacity:'0'}), play:(el,c)=>set(el,{transition:`opacity ${c.duration}ms ${c.ease}`,opacity:'1'})},
+      slide:{
+        prep:(el,c)=>{const m=c.amount;const map={up:`translateY(${px(m)})`,down:`translateY(-${px(m)})`,left:`translateX(${px(m)})`,right:`translateX(-${px(m)})`};set(el,{opacity:'0',transform:map[c.direction]||map.up});},
+        play:(el,c)=>set(el,{transition:`transform ${c.duration}ms ${c.ease},opacity ${c.duration}ms ${c.ease}`,transform:'translate(0,0)',opacity:'1'})
+      },
+      scale:{prep:(el,c)=>set(el,{opacity:'0',transform:'scale(0.85)'}), play:(el,c)=>set(el,{transition:`transform ${c.duration}ms ${c.ease},opacity ${c.duration}ms ${c.ease}`,transform:'scale(1)',opacity:'1'})},
+      rotate:{prep:(el,c)=>set(el,{opacity:'0',transform:`rotate(${px(c.amount)}deg)`}), play:(el,c)=>set(el,{transition:`transform ${c.duration}ms ${c.ease},opacity ${c.duration}ms ${c.ease}`,transform:'rotate(0)',opacity:'1'})},
+      bounce:{prep:(el,c)=>set(el,{opacity:'0',transform:'translateY(28px) scale(0.98)'}), play:(el,c)=>set(el,{transition:`transform ${c.duration}ms cubic-bezier(0.22,1,0.36,1),opacity ${c.duration}ms ${c.ease}`,transform:'translateY(0) scale(1)',opacity:'1'})},
+      blur:{prep:(el,c)=>set(el,{opacity:'0',filter:'blur(6px)',transform:'translateY(8px)'}), play:(el,c)=>set(el,{transition:`filter ${c.duration}ms ${c.ease},opacity ${c.duration}ms ${c.ease},transform ${c.duration}ms ${c.ease}`,filter:'blur(0)',opacity:'1',transform:'translateY(0)'})},
+      clip:{
+        prep:(el,c)=>{el.style.overflow='hidden';el.style.position='relative';const axis=(c.direction==='left'||c.direction==='right')?'X':'Y';const wrap=document.createElement('span');wrap.style.display='inline-block';wrap.style.clipPath=axis==='X'?'inset(0 100% 0 0)':'inset(100% 0 0 0)';wrap.append(...Array.from(el.childNodes));el.appendChild(wrap);el.__clip=wrap;},
+        play:(el,c)=>{const w=el.__clip;if(!w)return;w.style.transition=`clip-path ${c.duration}ms ${c.ease}`;w.style.clipPath='inset(0 0 0 0)';}
+      },
+      underline:{
+        prep:(el,c)=>{el.style.position='relative';const u=document.createElement('span');Object.assign(u.style,{position:'absolute',left:0,right:0,bottom:'-2px',height:'2px',background:'currentColor',transform:'scaleX(0)',transformOrigin:'left',opacity:'.9'});u.className='__underline';el.appendChild(u);},
+        play:(el,c)=>{const u=el.querySelector('.__underline');if(u){u.style.transition=`transform ${c.duration}ms ${c.ease}`;u.style.transform='scaleX(1)';}}
+      },
+      shine:{
+        prep:(el,c)=>{el.style.position='relative';el.style.overflow='hidden';const g=document.createElement('span');Object.assign(g.style,{position:'absolute',top:0,bottom:0,width:'80px',background:'linear-gradient(120deg,transparent,rgba(255,255,255,.35),transparent)',transform:'translateX(-120%)'});g.className='__shine';el.appendChild(g);},
+        play:(el,c)=>{const g=el.querySelector('.__shine');if(g){g.style.transition=`transform ${c.duration}ms ${c.ease}`;g.style.transform='translateX(180%)';}}
+      },
+      desat:{prep:(el,c)=>set(el,{filter:'saturate(0) contrast(0.9) brightness(1.05)',opacity:'.7'}), play:(el,c)=>set(el,{transition:`filter ${c.duration}ms ${c.ease},opacity ${c.duration}ms ${c.ease}`,filter:'saturate(1) contrast(1) brightness(1)',opacity:'1'})},
+      type:{
+        prep:(el,c)=>{const t=el.textContent;el.textContent='';el.__tw=t;const cur=document.createElement('span');cur.textContent='▍';cur.className='reveal-cursor';el.appendChild(cur);},
+        play:async(el,c)=>{const t=el.__tw||'';const holder=document.createTextNode('');el.firstChild.before(holder);const tick=()=>new Promise(r=>requestAnimationFrame(r));for(let i=0;i<t.length;i++){holder.textContent+=t[i];await tick();if(c.stagger>0)await new Promise(r=>setTimeout(r,Math.max(0,c.stagger/4)));}const cur=el.querySelector('.reveal-cursor');cur&&cur.remove();}
+      },
+      scramble:{
+        prep:(el,c)=>{const fin=el.textContent;el.textContent='';const pool="ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@$%#";const spans=fin.split('').map(ch=>{const s=document.createElement('span');s.textContent=ch===' ' ? ' ' : '';s.dataset.final=ch;s.style.display='inline-block';s.style.minWidth='0.5ch';return s});spans.forEach(s=>el.appendChild(s));el.__scr=spans;el.__pool=pool;},
+        play:async(el,c)=>{const d=c.duration,steps=Math.max(8,Math.floor(d/50));for(let k=0;k<steps;k++){el.__scr.forEach(s=>{if(s.dataset.final===' ')return;s.textContent=Math.random()<(k/steps)?s.dataset.final:el.__pool[Math.floor(Math.random()*el.__pool.length)]});await new Promise(r=>setTimeout(r,Math.max(16,d/steps)))}el.__scr.forEach(s=>s.textContent=s.dataset.final);}
+      }
+    };
+
+    const EXITS = {
+      none:{play(){}},
+      fadeOut:{play:(el,c)=>set(el,{transition:`opacity ${c.duration}ms ${c.ease}`,opacity:'0'})},
+      slideOut:{play:(el,c)=>{const m=c.amount;const map={up:`translateY(-${px(m)})`,down:`translateY(${px(m)})`,left:`translateX(-${px(m)})`,right:`translateX(${px(m)})`};set(el,{transition:`transform ${c.duration}ms ${c.ease},opacity ${c.duration}ms ${c.ease}`,transform:map[c.direction]||map.up,opacity:'0'})}},
+      shrinkOut:{play:(el,c)=>set(el,{transition:`transform ${c.duration}ms ${c.ease},opacity ${c.duration}ms ${c.ease}`,transform:'scale(0.85)',opacity:'0'})},
+      dissolveOut:{play:(el,c)=>set(el,{transition:`filter ${c.duration}ms ${c.ease},opacity ${c.duration}ms ${c.ease}`,filter:'blur(8px)',opacity:'0'})}
+    };
+
+    function animateUnits(units, fx, cfg, orderer){
+      const order = (orderer||((a)=>a.map((_,i)=>i)))(units);
+      order.forEach((idx,seq)=>{
+        const el = units[idx];
+        fx.prep && fx.prep(el,cfg);
+        setTimeout(()=> fx.play && fx.play(el,cfg), seq*(cfg.stagger||0));
+      });
+    }
+
+    // run on the current preview element only
+    const el = ui.previewText;
+    const cfg = readConfig(el);
+    const orderer = {sequential:orderers.sequential,random:orderers.random,centerOut:orderers.centerOut}[cfg.pattern] || orderers.sequential;
+    const units = (cfg.mode==='char'?splitters.char:cfg.mode==='word'?splitters.word:splitters.element)(el);
+    animateUnits(units, FX[cfg.type]||FX.fade, cfg, orderer);
+    if(cfg.exit!=='none'){
+      setTimeout(()=> animateUnits(units, EXITS[cfg.exit]||EXITS.none, cfg, orderer), Math.max(0,cfg.exitDelay||0) + cfg.duration + units.length*cfg.stagger);
+    }
+  }
+
+  /* ==========================
+     Code generation (JS/CSS)
+     ========================== */
+  const CSS_SNIPPET = `/* === Reveal (base helpers) === */
+.reveal-word,.reveal-char{opacity:0;display:inline-block}
+.reveal-cursor{display:inline-block;margin-left:2px;opacity:.6}
+`;
+
+  // self-contained auto-init engine (no scroll trigger)
+  const JS_ENGINE = `/* ==========================================================
+Reveal Engine (vanilla JS) — class-based auto-init
+Prefix: reveal-
+Usage examples:
+  <h1 class="reveal-fade reveal-word reveal-up" data-reveal-duration="700" data-reveal-stagger="90">Hello world</h1>
+  <p class="reveal-slide reveal-char reveal-down" data-reveal-amount="60">Lorem ipsum</p>
+Types: fade | slide | scale | rotate | bounce | blur | clip | underline | shine | desat | type | scramble
+Modes: element (default) | reveal-word | reveal-char
+Direction: reveal-up | reveal-down | reveal-left | reveal-right
+Data overrides: data-reveal-duration, data-reveal-stagger, data-reveal-ease, data-reveal-amount, data-reveal-exit, data-reveal-exit-delay
+========================================================== */
+(function(){
+  const qAll=(s,r=document)=>Array.from(r.querySelectorAll(s));
+  const set=(el,st)=>{for(const k in st) el.style[k]=st[k]};
+  const px=n=>typeof n==='number'? \`\${n}px\` : n;
+  const has=(el,c)=>el.classList.contains(c);
+
+  const splitters={
+    element:el=>[el],
+    word:el=>{const words=el.textContent.trim().split(/\\s+/);el.innerHTML=words.map(w=>\`<span class="reveal-word">\${w}</span>\`).join(' ');return qAll('.reveal-word',el)},
+    char:el=>{const chars=el.textContent.replace(/\\s+/g,' ').split('');el.innerHTML=chars.map(c=>c===' '?' ':'<span class="reveal-char">'+c+'</span>').join('');return qAll('.reveal-char',el)}
   };
 
-  // helpers
-  const setStyles = (el, styles) => { for (const k in styles) el.style[k] = styles[k]; };
-  const px = (n)=> (typeof n==='number'? `${n}px` : n);
-
-  /* ====== Animations Registry ====== */
-  const registry = {
-    fade: {
-      prepare(el, opt){ setStyles(el,{opacity:'0', transform:'none'}); },
-      play(el, opt){ setStyles(el,{transition:`opacity ${opt.duration}ms ${opt.ease}`, opacity:'1'}); }
-    },
-    slide: {
-      prepare(el,opt){
-        const m = opt.amount ?? 80;
-        const map = {up:`translateY(${px(m)})`, down:`translateY(-${px(m)})`,
-                     left:`translateX(${px(m)})`, right:`translateX(-${px(m)})`};
-        setStyles(el,{opacity:'0', transform:map[opt.direction]||`translateY(${px(m)})`});
-      },
-      play(el,opt){
-        setStyles(el,{transition:`transform ${opt.duration}ms ${opt.ease},opacity ${opt.duration}ms ${opt.ease}`,
-                      transform:'translate(0,0)', opacity:'1'});
-      }
-    },
-    scale: {
-      prepare(el,opt){ setStyles(el,{opacity:'0', transform:'scale(0.8)'}); },
-      play(el,opt){ setStyles(el,{transition:`transform ${opt.duration}ms ${opt.ease},opacity ${opt.duration}ms ${opt.ease}`,
-        transform:'scale(1)', opacity:'1'}); }
-    },
-    rotate: {
-      prepare(el,opt){ const a=opt.amount??-15; setStyles(el,{opacity:'0', transform:`rotate(${a}deg)`}); },
-      play(el,opt){ setStyles(el,{transition:`transform ${opt.duration}ms ${opt.ease},opacity ${opt.duration}ms ${opt.ease}`,
-        transform:'rotate(0deg)', opacity:'1'}); }
-    },
-    bounce: {
-      prepare(el,opt){ setStyles(el,{opacity:'0', transform:'translateY(30px) scale(0.98)'}); },
-      play(el,opt){
-        const d = opt.duration;
-        setStyles(el,{transition:`transform ${d}ms cubic-bezier(0.22,1,0.36,1),opacity ${d}ms ${opt.ease}`,
-          transform:'translateY(0) scale(1)', opacity:'1'});
-      }
-    },
-    blurIn: {
-      prepare(el,opt){ setStyles(el,{opacity:'0', filter:'blur(6px)', transform:'translateY(10px)'}); },
-      play(el,opt){
-        setStyles(el,{transition:`filter ${opt.duration}ms ${opt.ease},opacity ${opt.duration}ms ${opt.ease},transform ${opt.duration}ms ${opt.ease}`,
-          filter:'blur(0)', opacity:'1', transform:'translateY(0)'});
-      }
-    },
-    clipWipe: {
-      prepare(el,opt){
-        const axis = (opt.direction==='left' || opt.direction==='right')?'X':'Y';
-        const start = (opt.direction==='left' || opt.direction==='up')? '0%':'100%';
-        setStyles(el,{opacity:'1', overflow:'hidden', position:'relative'});
-        el.__clipWrap = document.createElement('span');
-        el.__clipWrap.style.display='inline-block';
-        el.__clipWrap.style.clipPath = axis==='X' ? `inset(0 100% 0 0)` : `inset(100% 0 0 0)`;
-        el.__clipWrap.append(...el.childNodes);
-        el.appendChild(el.__clipWrap);
-      },
-      play(el,opt){
-        const axis = (opt.direction==='left' || opt.direction==='right')?'X':'Y';
-        el.__clipWrap.style.transition = `clip-path ${opt.duration}ms ${opt.ease}`;
-        el.__clipWrap.style.clipPath = axis==='X' ? `inset(0 0 0 0)` : `inset(0 0 0 0)`;
-      }
-    },
-    underlineGrow: {
-      prepare(el,opt){
-        setStyles(el,{position:'relative', opacity:'1'});
-        const u=document.createElement('span');
-        u.style.position='absolute'; u.style.left='0'; u.style.right='0'; u.style.bottom='-2px';
-        u.style.height='2px'; u.style.background='currentColor'; u.style.transform='scaleX(0)';
-        u.style.transformOrigin='left'; u.style.opacity='0.9'; u.className='__underline';
-        el.appendChild(u);
-      },
-      play(el,opt){
-        const u=el.querySelector('.__underline');
-        if(!u) return;
-        u.style.transition=`transform ${opt.duration}ms ${opt.ease}`; u.style.transform='scaleX(1)';
-      }
-    },
-    shineSweep: {
-      prepare(el,opt){
-        setStyles(el,{position:'relative', overflow:'hidden'});
-        const g=document.createElement('span');
-        g.className='__shine';
-        Object.assign(g.style,{
-          position:'absolute', top:0, bottom:0, width:'80px',
-          background:'linear-gradient(120deg, transparent, rgba(255,255,255,.35), transparent)',
-          transform:'translateX(-120%)', filter:'blur(0.5px)'
-        });
-        el.appendChild(g);
-      },
-      play(el,opt){
-        const g=el.querySelector('.__shine'); if(!g) return;
-        g.style.transition=`transform ${opt.duration}ms ${opt.ease}`;
-        g.style.transform='translateX(180%)';
-      }
-    },
-    desaturateIn: {
-      prepare(el,opt){ setStyles(el,{filter:'saturate(0) contrast(0.8) brightness(1.1)', opacity:'0.7'}); },
-      play(el,opt){ setStyles(el,{transition:`filter ${opt.duration}ms ${opt.ease},opacity ${opt.duration}ms ${opt.ease}`,
-        filter:'saturate(1) contrast(1) brightness(1)', opacity:'1'}); }
-    },
-    typewriter: {
-      prepare(el,opt){
-        const text = el.textContent; el.textContent=''; el.__twText=text; setStyles(el,{opacity:'1', whiteSpace:'pre-wrap'});
-        el.__cursor = document.createElement('span'); el.__cursor.textContent='▍';
-        el.__cursor.style.marginLeft='2px'; el.__cursor.style.opacity='.6';
-        el.appendChild(el.__cursor);
-      },
-      async play(el,opt){
-        const t = el.__twText||''; const cps = Math.max(1, Math.floor((t.length)/(opt.duration/16)));
-        let i=0; el.__cursor.before(document.createTextNode(''));
-        const writeNode = el.childNodes[0];
-        const tick=()=>new Promise(r=>requestAnimationFrame(r));
-        while(i<t.length){
-          writeNode.textContent += t[i++]; await tick();
-          if(opt.stagger>0) await new Promise(r=>setTimeout(r, Math.max(0,opt.stagger/4)));
-        }
-        el.__cursor.remove();
-      }
-    },
-    scramble: {
-      prepare(el,opt){
-        el.__final = el.textContent; el.textContent=''; el.__pool="ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@$%#";
-        const spans = el.__final.split('').map(ch=>{
-          const s=document.createElement('span'); s.textContent = ch===' ' ? ' ' : '';
-          s.dataset.final = ch; s.style.display='inline-block'; s.style.minWidth='0.5ch'; return s;
-        });
-        spans.forEach(s=>el.appendChild(s));
-        el.__spans = spans;
-      },
-      async play(el,opt){
-        const d=opt.duration; const steps=Math.max(8, Math.floor(d/50));
-        for(let k=0;k<steps;k++){
-          el.__spans.forEach(s=>{
-            if(s.dataset.final===' ') return;
-            if(Math.random() < (k/steps)) s.textContent = s.dataset.final;
-            else s.textContent = el.__pool[Math.floor(Math.random()*el.__pool.length)];
-          });
-          await new Promise(r=>setTimeout(r, Math.max(16, d/steps)));
-        }
-        el.__spans.forEach(s=> s.textContent = s.dataset.final);
-      }
-    },
-    /* Exit animations */
-    fadeOut: {
-      play(el,opt){ setStyles(el,{transition:`opacity ${opt.duration}ms ${opt.ease}`, opacity:'0'}); }
-    },
-    slideOut: {
-      play(el,opt){
-        const m = opt.amount ?? 80;
-        const map = {up:`translateY(-${px(m)})`, down:`translateY(${px(m)})`,
-          left:`translateX(-${px(m)})`, right:`translateX(${px(m)})`};
-        setStyles(el,{transition:`transform ${opt.duration}ms ${opt.ease},opacity ${opt.duration}ms ${opt.ease}`,
-          transform:map[opt.direction]||`translateY(${px(m)})`, opacity:'0'});
-      }
-    },
-    shrinkOut: {
-      play(el,opt){ setStyles(el,{transition:`transform ${opt.duration}ms ${opt.ease},opacity ${opt.duration}ms ${opt.ease}`,
-        transform:'scale(0.8)', opacity:'0'}); }
-    },
-    dissolveOut: {
-      play(el,opt){ setStyles(el,{transition:`filter ${opt.duration}ms ${opt.ease},opacity ${opt.duration}ms ${opt.ease}`,
-        filter:'blur(8px)', opacity:'0'}); }
-    }
+  const orderers={
+    sequential:a=>a.map((_,i)=>i),
+    random:a=>a.map((_,i)=>i).sort(()=>Math.random()-0.5),
+    centerOut:a=>{const n=a.length,c=(n-1)/2;return a.map((_,i)=>[Math.abs(i-c),i]).sort((x,y)=>x[0]-y[0]).map(x=>x[1])}
   };
 
-  function animateElements(elements, type, opt){
-    const anim = registry[type]; if(!anim) return;
-    const order = (orderers[opt.pattern]||orderers.sequential)(elements, opt.gridCols);
-    order.forEach((idx, seq)=>{
-      const el = elements[idx];
-      anim.prepare && anim.prepare(el, opt);
-      const start = () => anim.play && anim.play(el, opt);
-      const delay = seq * (opt.stagger||0);
-      setTimeout(start, delay);
+  function readConfig(el){
+    const type= has(el,'reveal-fade')?'fade':has(el,'reveal-slide')?'slide':has(el,'reveal-scale')?'scale':has(el,'reveal-rotate')?'rotate':has(el,'reveal-bounce')?'bounce':has(el,'reveal-blur')?'blur':has(el,'reveal-clip')?'clip':has(el,'reveal-underline')?'underline':has(el,'reveal-shine')?'shine':has(el,'reveal-desat')?'desat':has(el,'reveal-type')?'type':has(el,'reveal-scramble')?'scramble':'fade';
+    const mode= has(el,'reveal-char')?'char':has(el,'reveal-word')?'word':'element';
+    const direction= has(el,'reveal-down')?'down':has(el,'reveal-left')?'left':has(el,'reveal-right')?'right':'up';
+    const pattern= has(el,'reveal-center')?'centerOut':has(el,'reveal-random')?'random':'sequential';
+    const num=(k,d)=>{const v=el.getAttribute(k);return v==null||v===''||isNaN(+v)?d:+v};
+    const str=(k,d)=>el.getAttribute(k) ?? d;
+    return {
+      type,mode,direction,pattern,
+      duration:num('data-reveal-duration',700),
+      stagger:num('data-reveal-stagger',90),
+      ease:str('data-reveal-ease','ease-out'),
+      amount:num('data-reveal-amount',80),
+      exit:str('data-reveal-exit','none'),
+      exitDelay:num('data-reveal-exit-delay',0)
+    };
+  }
+
+  const FX={
+    fade:{prep:(el,c)=>set(el,{opacity:'0'}),play:(el,c)=>set(el,{transition:\`opacity \${c.duration}ms \${c.ease}\`,opacity:'1'})},
+    slide:{prep:(el,c)=>{const m=c.amount;const map={up:\`translateY(\${px(m)})\`,down:\`translateY(-\${px(m)})\`,left:\`translateX(\${px(m)})\`,right:\`translateX(-\${px(m)})\`};set(el,{opacity:'0',transform:map[c.direction]||map.up})},play:(el,c)=>set(el,{transition:\`transform \${c.duration}ms \${c.ease},opacity \${c.duration}ms \${c.ease}\`,transform:'translate(0,0)',opacity:'1'})},
+    scale:{prep:(el,c)=>set(el,{opacity:'0',transform:'scale(0.85)'}),play:(el,c)=>set(el,{transition:\`transform \${c.duration}ms \${c.ease},opacity \${c.duration}ms \${c.ease}\`,transform:'scale(1)',opacity:'1'})},
+    rotate:{prep:(el,c)=>set(el,{opacity:'0',transform:\`rotate(\${px(c.amount)}deg)\`}),play:(el,c)=>set(el,{transition:\`transform \${c.duration}ms \${c.ease},opacity \${c.duration}ms \${c.ease}\`,transform:'rotate(0)',opacity:'1'})},
+    bounce:{prep:(el,c)=>set(el,{opacity:'0',transform:'translateY(28px) scale(0.98)'}),play:(el,c)=>set(el,{transition:\`transform \${c.duration}ms cubic-bezier(0.22,1,0.36,1),opacity \${c.duration}ms \${c.ease}\`,transform:'translateY(0) scale(1)',opacity:'1'})},
+    blur:{prep:(el,c)=>set(el,{opacity:'0',filter:'blur(6px)',transform:'translateY(8px)'}),play:(el,c)=>set(el,{transition:\`filter \${c.duration}ms \${c.ease},opacity \${c.duration}ms \${c.ease},transform \${c.duration}ms \${c.ease}\`,filter:'blur(0)',opacity:'1',transform:'translateY(0)'})},
+    clip:{prep:(el,c)=>{el.style.overflow='hidden';el.style.position='relative';const axis=(c.direction==='left'||c.direction==='right')?'X':'Y';const w=document.createElement('span');w.style.display='inline-block';w.style.clipPath=axis==='X'?'inset(0 100% 0 0)':'inset(100% 0 0 0)';w.append(...Array.from(el.childNodes));el.appendChild(w);el.__clip=w},play:(el,c)=>{const w=el.__clip;if(!w)return;w.style.transition=\`clip-path \${c.duration}ms \${c.ease}\`;w.style.clipPath='inset(0 0 0 0)'}},
+    underline:{prep:(el,c)=>{el.style.position='relative';const u=document.createElement('span');Object.assign(u.style,{position:'absolute',left:0,right:0,bottom:'-2px',height:'2px',background:'currentColor',transform:'scaleX(0)',transformOrigin:'left',opacity:'.9'});u.className='__underline';el.appendChild(u)},play:(el,c)=>{const u=el.querySelector('.__underline');if(u){u.style.transition=\`transform \${c.duration}ms \${c.ease}\`;u.style.transform='scaleX(1)'}}},
+    shine:{prep:(el,c)=>{el.style.position='relative';el.style.overflow='hidden';const g=document.createElement('span');Object.assign(g.style,{position:'absolute',top:0,bottom:0,width:'80px',background:'linear-gradient(120deg,transparent,rgba(255,255,255,.35),transparent)',transform:'translateX(-120%)'});g.className='__shine';el.appendChild(g)},play:(el,c)=>{const g=el.querySelector('.__shine');if(g){g.style.transition=\`transform \${c.duration}ms \${c.ease}\`;g.style.transform='translateX(180%)'}}},
+    desat:{prep:(el,c)=>set(el,{filter:'saturate(0) contrast(0.9) brightness(1.05)',opacity:'.7'}),play:(el,c)=>set(el,{transition:\`filter \${c.duration}ms \${c.ease},opacity \${c.duration}ms \${c.ease}\`,filter:'saturate(1) contrast(1) brightness(1)',opacity:'1'})},
+    type:{prep:(el,c)=>{const t=el.textContent;el.textContent='';el.__tw=t;const cur=document.createElement('span');cur.textContent='▍';cur.className='reveal-cursor';el.appendChild(cur)},play:async(el,c)=>{const t=el.__tw||'';const holder=document.createTextNode('');el.firstChild.before(holder);const tick=()=>new Promise(r=>requestAnimationFrame(r));for(let i=0;i<t.length;i++){holder.textContent+=t[i];await tick();if(c.stagger>0)await new Promise(r=>setTimeout(r,Math.max(0,c.stagger/4)))}const cur=el.querySelector('.reveal-cursor');cur&&cur.remove()}},
+    scramble:{prep:(el,c)=>{const fin=el.textContent;el.textContent='';const pool="ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@$%#";const spans=fin.split('').map(ch=>{const s=document.createElement('span');s.textContent=ch===' ' ? ' ' : '';s.dataset.final=ch;s.style.display='inline-block';s.style.minWidth='0.5ch';return s});spans.forEach(s=>el.appendChild(s));el.__scr=spans;el.__pool=pool},play:async(el,c)=>{const d=c.duration,steps=Math.max(8,Math.floor(d/50));for(let k=0;k<steps;k++){el.__scr.forEach(s=>{if(s.dataset.final===' ')return;s.textContent=Math.random()<(k/steps)?s.dataset.final:el.__pool[Math.floor(Math.random()*el.__pool.length)]});await new Promise(r=>setTimeout(r,Math.max(16,d/steps)))}el.__scr.forEach(s=>s.textContent=s.dataset.final)}}
+  };
+
+  const EXITS={
+    none:{play(){}},
+    fadeOut:{play:(el,c)=>set(el,{transition:\`opacity \${c.duration}ms \${c.ease}\`,opacity:'0'})},
+    slideOut:{play:(el,c)=>{const m=c.amount;const map={up:\`translateY(-\${px(m)})\`,down:\`translateY(\${px(m)})\`,left:\`translateX(-\${px(m)})\`,right:\`translateX(\${px(m)})\`};set(el,{transition:\`transform \${c.duration}ms \${c.ease},opacity \${c.duration}ms \${c.ease}\`,transform:map[c.direction]||map.up,opacity:'0'})}},
+    shrinkOut:{play:(el,c)=>set(el,{transition:\`transform \${c.duration}ms \${c.ease},opacity \${c.duration}ms \${c.ease}\`,transform:'scale(0.85)',opacity:'0'})},
+    dissolveOut:{play:(el,c)=>set(el,{transition:\`filter \${c.duration}ms \${c.ease},opacity \${c.duration}ms \${c.ease}\`,filter:'blur(8px)',opacity:'0'})}
+  };
+
+  function animateUnits(units, fx, cfg, orderer){
+    const order=(orderer||((a)=>a.map((_,i)=>i)))(units);
+    order.forEach((idx,seq)=>{
+      const el=units[idx];
+      fx.prep && fx.prep(el,cfg);
+      setTimeout(()=> fx.play && fx.play(el,cfg), seq*(cfg.stagger||0));
     });
   }
 
-  // public API
-  function run(selector, cfg={}){
-    const el = typeof selector==='string' ? document.querySelector(selector) : selector;
-    if(!el) return;
-    const defaults = {
-      type: 'fade', mode: 'word', direction:'up', duration:600, stagger:100, ease:'ease-out', amount:80,
-      pattern:'sequential', gridCols:3,
-      trigger:'none', rootMargin:'0px 0px -10% 0px',
-      exit:{ type:'none', delay:0 }
-    };
-    const opt = Object.assign({}, defaults, cfg);
-    const units = (split[opt.mode]||split.element)(el);
-
-    const doEnter = () => animateElements(units, opt.type, opt);
-    const doExit = () => {
-      if(!opt.exit || opt.exit.type==='none') return;
-      setTimeout(()=> animateElements(units, opt.exit.type, opt), opt.exit.delay||0);
-    };
-
-    if(opt.trigger==='none'){ doEnter(); return { enter:doEnter, exit:doExit }; }
-
-    const once = opt.trigger==='enterOnce';
-    const io = new IntersectionObserver((entries, obs)=>{
-      entries.forEach(entry=>{
-        if(entry.isIntersecting){
-          doEnter();
-          if(once) obs.unobserve(entry.target);
-        } else if(!once){
-          // optional: re-run exit when leaving
-          doExit();
-        }
-      });
-    }, {root:null, rootMargin:opt.rootMargin, threshold:0.1});
-    io.observe(el);
-    return { enter:doEnter, exit:doExit, observer:io };
+  function runElement(el){
+    const cfg=readConfig(el);
+    const fx=FX[cfg.type]||FX.fade;
+    const ord=orderers[cfg.pattern]||orderers.sequential;
+    const units=(cfg.mode==='char'?splitters.char:cfg.mode==='word'?splitters.word:splitters.element)(el);
+    animateUnits(units, fx, cfg, ord);
+    if(cfg.exit!=='none'){
+      setTimeout(()=> animateUnits(units, EXITS[cfg.exit]||EXITS.none, cfg, ord),
+        Math.max(0,cfg.exitDelay||0) + cfg.duration + units.length*cfg.stagger);
+    }
   }
 
-  return { run, registry, orderers, split };
-})();
+  function autoInit(){
+    const types=['reveal-fade','reveal-slide','reveal-scale','reveal-rotate','reveal-bounce','reveal-blur','reveal-clip','reveal-underline','reveal-shine','reveal-desat','reveal-type','reveal-scramble'];
+    const selector=types.map(c=>'.'+c).join(',');
+    qAll(selector).forEach(runElement);
+  }
 
-/* =========================
-   Builder wiring
-   ========================= */
-const els = {
-  animType: document.getElementById('animType'),
-  unitMode: document.getElementById('unitMode'),
-  direction: document.getElementById('direction'),
-  duration: document.getElementById('duration'),
-  stagger: document.getElementById('stagger'),
-  ease: document.getElementById('ease'),
-  amount: document.getElementById('amount'),
-  pattern: document.getElementById('pattern'),
-  gridCols: document.getElementById('gridCols'),
-  trigger: document.getElementById('trigger'),
-  rootMargin: document.getElementById('rootMargin'),
-  exitType: document.getElementById('exitType'),
-  exitDelay: document.getElementById('exitDelay'),
-  customText: document.getElementById('customText'),
-  demoText: document.getElementById('demoText'),
-  demoGrid: document.getElementById('demoGrid'),
-  previewBtn: document.getElementById('previewBtn'),
-  generateBtn: document.getElementById('generateBtn'),
-};
-const modal = {
-  root: document.getElementById('modal'),
-  content: document.getElementById('content'),
-  copy: document.getElementById('copyBtn'),
-  close: document.getElementById('closeBtn'),
-  tabs: [...document.querySelectorAll('.tab')],
-};
-let lastInstance = null;
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', autoInit); else autoInit();
+  window.RevealInit=autoInit;
+})();`;
 
-function getConfig(){
-  return {
-    type: els.animType.value,
-    mode: els.unitMode.value,
-    direction: els.direction.value,
-    duration: +els.duration.value,
-    stagger: +els.stagger.value,
-    ease: els.ease.value,
-    amount: +els.amount.value,
-    pattern: els.pattern.value,
-    gridCols: +els.gridCols.value,
-    trigger: 'none',
-    exit: { type: els.exitType.value, delay: +els.exitDelay.value }
-  };
-}
+  const HOW_TO = `How to use:
+1) Paste the CSS block into your site's global CSS (or a CSS embed).
+2) Paste the JS block into a Code/HTML widget (footer/head), once per site.
+3) Add classes to any element you want to animate:
+   - Type: reveal-fade | reveal-slide | reveal-scale | reveal-rotate | reveal-bounce | reveal-blur | reveal-clip | reveal-underline | reveal-shine | reveal-desat | reveal-type | reveal-scramble
+   - Mode: reveal-word (per word) or reveal-char (per character). Omit for entire element.
+   - Direction (for slide/clip/exit): reveal-up | reveal-down | reveal-left | reveal-right
+4) Optional data attributes to override defaults:
+   data-reveal-duration="700"
+   data-reveal-stagger="90"
+   data-reveal-amount="80"
+   data-reveal-ease="cubic-bezier(0.22,1,0.36,1)"
+   data-reveal-exit="fadeOut|slideOut|shrinkOut|dissolveOut"
+   data-reveal-exit-delay="200"
+5) Example:
+   <h2 class="reveal-slide reveal-word reveal-up" data-reveal-duration="700" data-reveal-stagger="80" data-reveal-amount="60">
+     Make it move with one class
+   </h2>`;
 
-function preview(){
-  // set text
-  els.demoText.textContent = els.customText.value;
-  // reset grid items text
-  els.demoGrid.querySelectorAll('.box').forEach((b,i)=>b.textContent = ['Card One','Card Two','Card Three'][i] || `Card ${i+1}`);
-
-  // re-run
-  if(lastInstance && lastInstance.observer){ lastInstance.observer.disconnect(); }
-  els.demoText.innerHTML = els.customText.value; // reset any split spans
-  els.demoGrid.innerHTML = `
-    <div class="box">Card One</div>
-    <div class="box">Card Two</div>
-    <div class="box">Card Three</div>`;
-
-  lastInstance = AnimX.run('#demoText', getConfig());
-  // also show gridDiagonal patterns
-  AnimX.run('#demoGrid', { ...getConfig(), mode:'element', pattern: els.pattern.value, gridCols:+els.gridCols.value });
-}
-
-els.previewBtn.addEventListener('click', preview);
-window.addEventListener('load', preview);
-
-/* ===== Code Generator (JS/CSS/How-to) ===== */
-const jsTemplate = (cfg) => `// AnimX minimal usage
-// 1) include AnimX (engine) or copy the class from repo
-// 2) run with your selector:
-AnimX.run("#myText", {
-  type: "${cfg.type}",
-  mode: "${cfg.mode}",          // "element" | "word" | "char"
-  direction: "${cfg.direction}",// up|down|left|right (used by slide/clip/exit)
-  duration: ${cfg.duration},
-  stagger: ${cfg.stagger},
-  ease: "${cfg.ease}",
-  amount: ${cfg.amount},        // px/deg depending on type
-  pattern: "${cfg.pattern}",    // sequential|reverse|centerOut|edgesIn|random|gridDiagonal
-  gridCols: ${cfg.gridCols},
-  trigger: "none",              // or "enterOnce" | "enterEvery"
-  rootMargin: "0px 0px -10% 0px",
-  exit: { type: "${cfg.exit.type}", delay: ${cfg.exit.delay} }
-});`;
-
-const cssSnippet = `/* Minimal CSS helpers (include once) */
-.tr-word,.tr-char{opacity:0;display:inline-block}`
-
-const howTo = `Integration:
-1. Copy the AnimX engine file (or this single-page build) into your project.
-2. Put your text element in HTML, e.g. <h1 id="myText">Hello World</h1>.
-3. Call AnimX.run("#myText", { ...options }) with a config like the JS tab.
-4. For scroll-based reveal, set { trigger: "enterOnce" } and include rootMargin if needed.
-5. Available types: fade, slide, scale, rotate, bounce, blurIn, clipWipe, underlineGrow, shineSweep, desaturateIn, typewriter, scramble.
-6. Stagger patterns: sequential, reverse, centerOut, edgesIn, random, gridDiagonal (set gridCols accordingly).
-7. Exit animations: fadeOut, slideOut, shrinkOut, dissolveOut.`;
-
-function openModal(kind, cfg){
-  modal.root.style.display='flex';
-  modal.tabs.forEach(t=>t.classList.remove('active'));
-  const active = modal.tabs.find(t=>t.dataset.tab===kind); active.classList.add('active');
-
-  modal.content.textContent = (kind==='js' ? jsTemplate(cfg) : kind==='css' ? cssSnippet : howTo);
-  modal.copy.onclick = () => { navigator.clipboard.writeText(modal.content.textContent); modal.copy.textContent='Copied'; setTimeout(()=>modal.copy.textContent='Copy',1100); };
-}
-modal.close.onclick = ()=> modal.root.style.display='none';
-modal.tabs.forEach(t=> t.addEventListener('click',()=> openModal(t.dataset.tab, getConfig())));
-
-els.generateBtn.addEventListener('click', ()=> openModal('js', getConfig()));
-</script>
+  function openModal(kind){
+    ui.modal.style.display = 'flex';
+    ui.modalContent.textContent = (kind==='js' ? JS_ENGINE : kind==='css' ? CSS_SNIPPET : HOW_TO);
+    ui.modalCopy.onclick = () => {
+      navigator.clipboard.writeText(ui.modalContent.textContent);
+      ui.modalCopy.textContent = 'Copied';
+      setTimeout(()=> ui.modalCopy.textContent = 'Copy', 1100);
+    };
+    ui.modalTabs.forEach(t=> t.classList.toggle('is-active', t.dataset.tab===kind));
+  }
+  ui.modalClose.addEventListener('click', ()=> ui.modal.style.display='none');
+  ui.modalTabs.forEach(t=> t.addEventListener('click', ()=> openModal(t.dataset.tab)));
+  ui.btnGenerate.addEventListener('click', ()=> openModal('js'));
+  </script>
 </body>
 </html>
