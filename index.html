@@ -147,14 +147,14 @@ code.inline{background:#0e1628;border:1px solid var(--border);padding:1px 6px;bo
 
     <div class="section">
       <p style="color:#cfe0ff;font-weight:600;">1️⃣ Include CSS + JS from CDN</p>
-      <pre class="code-block js-cdn"><code>&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ashfad0273/Entrance-Animation@main/reveal.css?v=3"&gt;
+      <pre class="code-block"><code class="js-cdn-code">&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ashfad0273/Entrance-Animation@main/reveal.css?v=3"&gt;
 &lt;script src="https://cdn.jsdelivr.net/gh/ashfad0273/Entrance-Animation@main/reveal-engine.min.js?v=3"&gt;&lt;/script&gt;</code></pre>
       <button class="is-outline js-copy-cdn">Copy CDN</button>
     </div>
 
     <div class="section" style="margin-top:18px;">
       <p style="color:#cfe0ff;font-weight:600;">2️⃣ Add Reveal Classes to Any Element</p>
-      <pre class="code-block js-example"><code></code></pre>
+      <pre class="code-block"><code class="js-example-code"></code></pre>
       <button class="is-outline js-copy-example">Copy Example</button>
     </div>
   </div>
@@ -162,70 +162,182 @@ code.inline{background:#0e1628;border:1px solid var(--border);padding:1px 6px;bo
 
 
 <script>
-const $=(s,r=document)=>r.querySelector(s);const $$=(s,r=document)=>[...r.querySelectorAll(s)];
-const ui={
-  type:$('.js-animType'),mode:$('.js-mode'),direction:$('.js-direction'),duration:$('.js-duration'),
-  stagger:$('.js-stagger'),ease:$('.js-ease'),amount:$('.js-amount'),pattern:$('.js-pattern'),
-  exit:$('.js-exit'),exitDelay:$('.js-exitDelay'),text:$('.js-text'),previewText:$('.js-previewText'),
-  btnPreview:$('.js-preview'),btnGenerate:$('.js-generate'),modal:$('.js-modal'),
-  modalContent:$('.js-content'),modalCopy:$('.js-copy'),modalClose:$('.js-close'),modalTabs:$$('.js-tab')
-};
-function classListFromUI(){
-  const c=[];c.push(`reveal-${ui.type.value}`);
-  if(ui.mode.value==='word')c.push('reveal-word');else if(ui.mode.value==='char')c.push('reveal-char');
-  c.push(`reveal-${ui.direction.value}`);
-  if(ui.pattern.value==='random')c.push('reveal-random');else if(ui.pattern.value==='centerOut')c.push('reveal-center');
-  return c.join(' ');
-}
-function applyPreview(){
-  ui.previewText.innerHTML=ui.text.value;
-  const cls=classListFromUI();
-  ui.previewText.className=`preview-text js-previewText ${cls}`;
-  ui.previewText.dataset.revealDuration=ui.duration.value;
-  ui.previewText.dataset.revealStagger=ui.stagger.value;
-  ui.previewText.dataset.revealEase=ui.ease.value;
-  ui.previewText.dataset.revealAmount=ui.amount.value;
-  ui.previewText.dataset.revealExit=ui.exit.value;
-  ui.previewText.dataset.revealExitDelay=ui.exitDelay.value;
-  RevealInit();
-}
-ui.btnPreview.onclick=applyPreview;window.onload=applyPreview;
-function openModal() {
-  ui.modal.style.display = 'flex';
+document.addEventListener('DOMContentLoaded', () => {
+  const $ = (s, r = document) => r.querySelector(s);
 
-  // dynamically build example code from current UI
-  const exampleCode = `<div class="${classListFromUI()}"
-  data-reveal-duration="${ui.duration.value}"
-  data-reveal-stagger="${ui.stagger.value}"
-  data-reveal-amount="${ui.amount.value}"
-  data-reveal-ease="${ui.ease.value}"
-  data-reveal-exit="${ui.exit.value}"
-  data-reveal-exit-delay="${ui.exitDelay.value}">
-  ${ui.text.value}
-</div>`;
-
-  // update modal content
-  ui.modal.querySelector('.js-example code').textContent = exampleCode;
-
-  // copy handlers
-  const copyBtn = (btn, targetSelector) => {
-    btn.onclick = () => {
-      const codeEl = ui.modal.querySelector(targetSelector);
-      navigator.clipboard.writeText(codeEl.textContent);
-      btn.textContent = 'Copied!';
-      setTimeout(() => (btn.textContent = 'Copy'), 1000);
-    };
+  const ui = {
+    type: $('.js-animType'),
+    mode: $('.js-mode'),
+    direction: $('.js-direction'),
+    duration: $('.js-duration'),
+    stagger: $('.js-stagger'),
+    ease: $('.js-ease'),
+    amount: $('.js-amount'),
+    pattern: $('.js-pattern'),
+    exit: $('.js-exit'),
+    exitDelay: $('.js-exitDelay'),
+    text: $('.js-text'),
+    previewContainer: $('.preview'),
+    btnPreview: $('.js-preview'),
+    btnGenerate: $('.js-generate'),
+    modal: $('.js-modal'),
+    modalClose: $('.js-close'),
+    panel: $('aside'),
+    cdnCode: $('.js-cdn-code'),
+    exampleCode: $('.js-example-code'),
+    btnCopyCdn: $('.js-copy-cdn'),
+    btnCopyExample: $('.js-copy-example'),
   };
 
-  copyBtn(ui.modal.querySelector('.js-copy-cdn'), '.js-cdn code');
-  copyBtn(ui.modal.querySelector('.js-copy-example'), '.js-example code');
-}
-ui.btnGenerate.onclick = openModal;
-ui.modalClose.onclick = () => (ui.modal.style.display = 'none');
+  // Store the original preview element to clone from it later
+  const originalPreviewEl = $('.js-previewText');
 
-ui.modalClose.onclick=()=>ui.modal.style.display='none';
-ui.modalTabs.forEach(t=>t.onclick=()=>openModal(t.dataset.tab));
-ui.btnGenerate.onclick=()=>openModal('html');
+  /**
+   * Generates a string of classes based on UI selections.
+   */
+  function getClassListFromUI() {
+    const c = ['preview-text', 'js-previewText']; // Base classes
+    c.push(`reveal-${ui.type.value}`);
+    if (ui.mode.value === 'word') c.push('reveal-word');
+    else if (ui.mode.value === 'char') c.push('reveal-char');
+    c.push(`reveal-${ui.direction.value}`);
+    if (ui.pattern.value === 'random') c.push('reveal-random');
+    else if (ui.pattern.value === 'centerOut') c.push('reveal-center');
+    return c.join(' ');
+  }
+
+  /**
+   * Applies the selected animation settings to the preview element.
+   * Clones the element to reliably replay the animation.
+   */
+  function applyPreview() {
+    const newPreviewEl = originalPreviewEl.cloneNode(false); // Clone without children
+
+    newPreviewEl.textContent = ui.text.value;
+    newPreviewEl.className = getClassListFromUI();
+    
+    // Set data attributes
+    newPreviewEl.dataset.revealDuration = ui.duration.value;
+    newPreviewEl.dataset.revealStagger = ui.stagger.value;
+    newPreviewEl.dataset.revealEase = ui.ease.value;
+    newPreviewEl.dataset.revealAmount = ui.amount.value;
+
+    if (ui.exit.value !== 'none') {
+        newPreviewEl.dataset.revealExit = ui.exit.value;
+    }
+    if (ui.exitDelay.value !== '0' && ui.exitDelay.value !== '') {
+        newPreviewEl.dataset.revealExitDelay = ui.exitDelay.value;
+    }
+    
+    // Replace the old element with the new one to trigger re-animation
+    ui.previewContainer.querySelector('.js-previewText').replaceWith(newPreviewEl);
+
+    // Re-initialize the animation library
+    if (window.RevealInit) {
+      RevealInit();
+    }
+  }
+
+  // --- Event Listeners ---
+
+  // Auto-update preview with rAF for performance
+  let rafId = 0;
+  const schedulePreview = () => {
+    cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(applyPreview);
+  };
+  ui.panel.addEventListener('input', schedulePreview);
+
+  // Manual replay button
+  ui.btnPreview.addEventListener('click', applyPreview);
+  
+  // --- Modal Logic ---
+
+  function generateExampleCode() {
+    const classList = getClassListFromUI().replace('preview-text js-previewText', '').trim();
+    
+    let attributes = `\n  data-reveal-duration="${ui.duration.value}"`;
+    attributes += `\n  data-reveal-stagger="${ui.stagger.value}"`;
+    attributes += `\n  data-reveal-amount="${ui.amount.value}"`;
+    attributes += `\n  data-reveal-ease="${ui.ease.value}"`;
+
+    if (ui.exit.value !== 'none') {
+        attributes += `\n  data-reveal-exit="${ui.exit.value}"`;
+    }
+    if (ui.exitDelay.value !== '0' && ui.exitDelay.value !== '') {
+        attributes += `\n  data-reveal-exit-delay="${ui.exitDelay.value}"`;
+    }
+
+    return `<div class="${classList}"${attributes}>
+  ${ui.text.value}
+</div>`;
+  }
+
+  function openModal() {
+    ui.exampleCode.textContent = generateExampleCode();
+    ui.modal.style.display = 'flex';
+  }
+
+  function closeModal() {
+    ui.modal.style.display = 'none';
+  }
+
+  ui.btnGenerate.addEventListener('click', openModal);
+  ui.modalClose.addEventListener('click', closeModal);
+  ui.modal.addEventListener('click', (e) => {
+    if (e.target === ui.modal) closeModal();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && ui.modal.style.display === 'flex') {
+      closeModal();
+    }
+  });
+
+  // --- Copy to Clipboard Logic ---
+
+  async function copyToClipboard(text, button) {
+    const originalText = button.textContent;
+    try {
+      if (!navigator.clipboard) {
+        throw new Error("Clipboard API not available.");
+      }
+      await navigator.clipboard.writeText(text);
+      button.textContent = 'Copied!';
+    } catch (err) {
+      // Fallback for non-secure contexts (e.g., http) or older browsers
+      try {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'absolute';
+        ta.style.left = '-9999px';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        ta.remove();
+        button.textContent = 'Copied!';
+      } catch (fallbackErr) {
+        button.textContent = 'Failed!';
+        console.error("Failed to copy to clipboard:", fallbackErr);
+      }
+    } finally {
+      setTimeout(() => {
+        button.textContent = originalText;
+      }, 1500);
+    }
+  }
+
+  ui.btnCopyCdn.addEventListener('click', () => {
+    copyToClipboard(ui.cdnCode.textContent, ui.btnCopyCdn);
+  });
+  
+  ui.btnCopyExample.addEventListener('click', () => {
+    copyToClipboard(ui.exampleCode.textContent, ui.btnCopyExample);
+  });
+
+  // Initial render on page load
+  applyPreview();
+});
 </script>
+
 </body>
 </html>
