@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Reveal Builder — Lightweight Animation Engine</title>
 
-<!-- ✅ include official reveal css + js -->
+<!-- Optional helpers CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ashfad0273/Entrance-Animation@main/reveal.css?v=3">
-<script src="https://cdn.jsdelivr.net/gh/ashfad0273/Entrance-Animation@main/reveal-engine.min.js?v=3"></script>
-
+<!-- RevealEngine v2 -->
+<script src="https://cdn.jsdelivr.net/gh/ashfad0273/Entrance-Animation@main/reveal-engine.min.js?v=2"></script>
 <style>
 :root{
   --bg:#0b1220;--panel:#141c2b;--muted:#9fb0c7;--text:#e6edf6;
@@ -35,6 +35,8 @@ button{
 button:hover{opacity:.95}button:active{transform:translateY(1px)}
 .is-outline{background:transparent;color:var(--text);border:1px solid var(--border)}
 .is-blue{background:var(--accent2);color:#fff}
+.switch{display:flex;gap:10px;align-items:center}
+.switch input{width:auto}
 main{flex:1;display:flex;align-items:center;justify-content:center;padding:28px}
 .preview{width:min(920px,100%);background:var(--panel);border:1px solid var(--border);border-radius:16px;
   padding:32px;min-height:300px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
@@ -50,17 +52,7 @@ pre{background:var(--code);color:#d0e2ff;border:1px solid var(--border);border-r
 .toolbar{display:flex;gap:8px;justify-content:flex-end;margin:8px 0 14px}
 .badge{display:inline-flex;gap:8px;align-items:center;font-size:12px;color:#9fb0c7}
 code.inline{background:#0e1628;border:1px solid var(--border);padding:1px 6px;border-radius:6px}
-.code-block {
-  background:#0e1729;
-  border:1px solid #2b3a57;
-  color:#cfe0ff;
-  padding:12px;
-  border-radius:8px;
-  font-family:ui-monospace,Menlo,monospace;
-  font-size:13px;
-  overflow:auto;
-}
-
+.code-block {background:#0e1729;border:1px solid #2b3a57;color:#cfe0ff;padding:12px;border-radius:8px;font-family:ui-monospace,Menlo,monospace;font-size:13px;overflow:auto}
 </style>
 </head>
 <body>
@@ -68,14 +60,16 @@ code.inline{background:#0e1628;border:1px solid var(--border);padding:1px 6px;bo
 <div class="layout">
   <aside>
     <h1>Reveal — Builder</h1>
+
     <div class="group">
       <label>Animation Type</label>
       <select class="js-animType">
         <option>fade</option><option>slide</option><option>scale</option><option>rotate</option>
         <option>bounce</option><option>blur</option><option>clip</option><option>underline</option>
-        <option>shine</option><option>desat</option><option>type</option><option>scramble</option>
+        <option>desat</option><option>type</option><option>scramble</option>
       </select>
     </div>
+
     <div class="row">
       <div class="group">
         <label>Mode</label>
@@ -86,6 +80,7 @@ code.inline{background:#0e1628;border:1px solid var(--border);padding:1px 6px;bo
         <select class="js-direction"><option>up</option><option>down</option><option>left</option><option>right</option></select>
       </div>
     </div>
+
     <div class="row">
       <div class="group">
         <label>Duration (ms)</label><input class="js-duration" type="number" value="700">
@@ -94,46 +89,56 @@ code.inline{background:#0e1628;border:1px solid var(--border);padding:1px 6px;bo
         <label>Stagger (ms)</label><input class="js-stagger" type="number" value="90">
       </div>
     </div>
+
     <div class="row">
       <div class="group">
         <label>Easing</label>
         <select class="js-ease">
           <option>ease-out</option><option>ease-in</option><option>ease-in-out</option><option>linear</option>
-          <option value="cubic-bezier(0.22,1,0.36,1)">expo-out</option>
+          <option value="cubic-bezier(0.22,1,0.36,1)">cubic-bezier(0.22,1,0.36,1)</option>
         </select>
       </div>
       <div class="group">
         <label>Amount (px/deg)</label><input class="js-amount" type="number" value="80">
       </div>
     </div>
+
     <div class="row">
       <div class="group">
-        <label>Pattern</label>
-        <select class="js-pattern"><option>sequential</option><option>centerOut</option><option>random</option></select>
+        <label>Delay (ms)</label><input class="js-delay" type="number" value="0">
       </div>
       <div class="group">
-        <label>Exit Animation</label>
-        <select class="js-exit"><option>none</option><option>fadeOut</option><option>slideOut</option><option>shrinkOut</option><option>dissolveOut</option></select>
+        <label>Exit</label>
+        <select class="js-exit"><option value="">none</option><option value="fade">exit-fade</option><option value="slide">exit-slide</option><option value="shrink">exit-shrink</option><option value="dissolve">exit-dissolve</option></select>
       </div>
     </div>
+
     <div class="group">
       <label>Exit Delay (ms)</label><input class="js-exitDelay" type="number" value="0">
     </div>
+
+    <div class="row">
+      <label class="switch"><input class="js-scroll" type="checkbox" checked> <span>Scroll trigger</span></label>
+      <label class="switch"><input class="js-once" type="checkbox"> <span>Play once</span></label>
+    </div>
+
     <div class="group">
       <label>Preview Text</label>
       <textarea class="js-text" rows="2">Building lightweight animation libraries is fun and fast</textarea>
     </div>
+
     <div class="actions">
       <button class="js-preview is-outline">Preview</button>
       <button class="js-generate is-blue">Generate Code</button>
     </div>
-    <div class="badge"><span>Engine: <code class="inline">reveal</code> · Vanilla JS · No deps</span></div>
+
+    <div class="badge"><span>Engine: <code class="inline">.reveal</code> + <code class="inline">data-reveal</code> · Vanilla JS · No deps</span></div>
   </aside>
 
   <main>
     <div class="preview">
       <h2>Preview</h2>
-      <div class="preview-text js-previewText">Building lightweight animation libraries is fun and fast</div>
+      <div class="preview-text js-previewText reveal" data-reveal="fade up 700 90 ease-out amount-80 scroll">Building lightweight animation libraries is fun and fast</div>
     </div>
   </main>
 </div>
@@ -146,20 +151,21 @@ code.inline{background:#0e1628;border:1px solid var(--border);padding:1px 6px;bo
     </div>
 
     <div class="section">
-      <p style="color:#cfe0ff;font-weight:600;">1️⃣ Include CSS + JS from CDN</p>
-      <pre class="code-block"><code class="js-cdn-code">&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ashfad0273/Entrance-Animation@main/reveal.css?v=3"&gt;
-&lt;script src="https://cdn.jsdelivr.net/gh/ashfad0273/Entrance-Animation@main/reveal-engine.min.js?v=3"&gt;&lt;/script&gt;</code></pre>
+      <p style="color:#cfe0ff;font-weight:600;">1️⃣ Include JS (and optional CSS) from CDN</p>
+      <pre class="code-block"><code class="js-cdn-code">&lt;!-- Optional helpers CSS --&gt;
+&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ashfad0273/Entrance-Animation@main/reveal.css?v=3"&gt;
+&lt;!-- RevealEngine v2 --&gt;
+&lt;script src="https://cdn.jsdelivr.net/gh/ashfad0273/Entrance-Animation@main/reveal-engine.min.js?v=2"&gt;&lt;/script&gt;</code></pre>
       <button class="is-outline js-copy-cdn">Copy CDN</button>
     </div>
 
     <div class="section" style="margin-top:18px;">
-      <p style="color:#cfe0ff;font-weight:600;">2️⃣ Add Reveal Classes to Any Element</p>
+      <p style="color:#cfe0ff;font-weight:600;">2️⃣ Add one class + one attribute</p>
       <pre class="code-block"><code class="js-example-code"></code></pre>
       <button class="is-outline js-copy-example">Copy Example</button>
     </div>
   </div>
 </div>
-
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
@@ -173,9 +179,11 @@ document.addEventListener('DOMContentLoaded', () => {
     stagger: $('.js-stagger'),
     ease: $('.js-ease'),
     amount: $('.js-amount'),
-    pattern: $('.js-pattern'),
+    delay: $('.js-delay'),
     exit: $('.js-exit'),
     exitDelay: $('.js-exitDelay'),
+    scroll: $('.js-scroll'),
+    once: $('.js-once'),
     text: $('.js-text'),
     previewContainer: $('.preview'),
     btnPreview: $('.js-preview'),
@@ -189,155 +197,111 @@ document.addEventListener('DOMContentLoaded', () => {
     btnCopyExample: $('.js-copy-example'),
   };
 
-  // Store the original preview element to clone from it later
   const originalPreviewEl = $('.js-previewText');
 
-  /**
-   * Generates a string of classes based on UI selections.
-   */
-  function getClassListFromUI() {
-    const c = ['preview-text', 'js-previewText']; // Base classes
-    c.push(`reveal-${ui.type.value}`);
-    if (ui.mode.value === 'word') c.push('reveal-word');
-    else if (ui.mode.value === 'char') c.push('reveal-char');
-    c.push(`reveal-${ui.direction.value}`);
-    if (ui.pattern.value === 'random') c.push('reveal-random');
-    else if (ui.pattern.value === 'centerOut') c.push('reveal-center');
-    return c.join(' ');
+  // Build data-reveal token string from UI
+  function buildTokens() {
+    const tokens = [];
+    tokens.push(ui.type.value);                 // type
+    tokens.push(ui.direction.value);            // direction
+    tokens.push(String(Math.max(0, +ui.duration.value || 0))); // duration
+    tokens.push(String(Math.max(0, +ui.stagger.value || 0)));  // stagger
+    tokens.push(ui.ease.value);                 // easing
+
+    const amt = +ui.amount.value || 0;
+    if (amt) tokens.push(`amount-${amt}`);
+
+    const delay = +ui.delay.value || 0;
+    if (delay) tokens.push(`delay-${delay}`);
+
+    // mode
+    const m = ui.mode.value;
+    if (m === 'word' || m === 'char') tokens.push(m);
+
+    // exits
+    const ex = ui.exit.value;
+    if (ex) tokens.push(`exit-${ex}`);
+    const exd = +ui.exitDelay.value || 0;
+    if (exd) tokens.push(`exit-delay-${exd}`);
+
+    // scroll + once
+    if (ui.scroll.checked) tokens.push('scroll'); else tokens.push('no-scroll');
+    if (ui.once.checked) tokens.push('once');
+
+    return tokens.join(' ');
   }
 
-  /**
-   * Applies the selected animation settings to the preview element.
-   * Clones the element to reliably replay the animation.
-   */
+  // Construct a .reveal element for preview
+  function makePreviewEl() {
+    const el = originalPreviewEl.cloneNode(false);
+    el.className = 'preview-text js-previewText reveal';
+    el.textContent = ui.text.value;
+    el.setAttribute('data-reveal', buildTokens());
+    return el;
+  }
+
   function applyPreview() {
-    const newPreviewEl = originalPreviewEl.cloneNode(false); // Clone without children
-
-    newPreviewEl.textContent = ui.text.value;
-    newPreviewEl.className = getClassListFromUI();
-    
-    // Set data attributes
-    newPreviewEl.dataset.revealDuration = ui.duration.value;
-    newPreviewEl.dataset.revealStagger = ui.stagger.value;
-    newPreviewEl.dataset.revealEase = ui.ease.value;
-    newPreviewEl.dataset.revealAmount = ui.amount.value;
-
-    if (ui.exit.value !== 'none') {
-        newPreviewEl.dataset.revealExit = ui.exit.value;
-    }
-    if (ui.exitDelay.value !== '0' && ui.exitDelay.value !== '') {
-        newPreviewEl.dataset.revealExitDelay = ui.exitDelay.value;
-    }
-    
-    // Replace the old element with the new one to trigger re-animation
-    ui.previewContainer.querySelector('.js-previewText').replaceWith(newPreviewEl);
-
-    // Re-initialize the animation library
-    if (window.RevealInit) {
-      RevealInit();
+    const newEl = makePreviewEl();
+    ui.previewContainer.querySelector('.js-previewText').replaceWith(newEl);
+    // tell engine to (re)parse
+    if (window.RevealEngine && typeof RevealEngine.refresh === 'function') {
+      RevealEngine.refresh(ui.previewContainer);
+    } else if (window.RevealEngine && typeof RevealEngine.init === 'function') {
+      RevealEngine.init(ui.previewContainer);
     }
   }
 
-  // --- Event Listeners ---
-
-  // Auto-update preview with rAF for performance
-  let rafId = 0;
-  const schedulePreview = () => {
-    cancelAnimationFrame(rafId);
-    rafId = requestAnimationFrame(applyPreview);
-  };
-  ui.panel.addEventListener('input', schedulePreview);
-
-  // Manual replay button
-  ui.btnPreview.addEventListener('click', applyPreview);
-  
-  // --- Modal Logic ---
-
+  // Modal example block
   function generateExampleCode() {
-    const classList = getClassListFromUI().replace('preview-text js-previewText', '').trim();
-    
-    let attributes = `\n  data-reveal-duration="${ui.duration.value}"`;
-    attributes += `\n  data-reveal-stagger="${ui.stagger.value}"`;
-    attributes += `\n  data-reveal-amount="${ui.amount.value}"`;
-    attributes += `\n  data-reveal-ease="${ui.ease.value}"`;
-
-    if (ui.exit.value !== 'none') {
-        attributes += `\n  data-reveal-exit="${ui.exit.value}"`;
-    }
-    if (ui.exitDelay.value !== '0' && ui.exitDelay.value !== '') {
-        attributes += `\n  data-reveal-exit-delay="${ui.exitDelay.value}"`;
-    }
-
-    return `<div class="${classList}"${attributes}>
+    const tokens = buildTokens();
+    const html = `<div class="reveal" data-reveal="${tokens}">
   ${ui.text.value}
 </div>`;
+    return html;
   }
 
   function openModal() {
     ui.exampleCode.textContent = generateExampleCode();
     ui.modal.style.display = 'flex';
   }
+  function closeModal() { ui.modal.style.display = 'none'; }
 
-  function closeModal() {
-    ui.modal.style.display = 'none';
-  }
-
+  // Events
+  let rafId = 0;
+  const schedulePreview = () => { cancelAnimationFrame(rafId); rafId = requestAnimationFrame(applyPreview); };
+  ui.panel.addEventListener('input', schedulePreview);
+  ui.btnPreview.addEventListener('click', applyPreview);
   ui.btnGenerate.addEventListener('click', openModal);
   ui.modalClose.addEventListener('click', closeModal);
-  ui.modal.addEventListener('click', (e) => {
-    if (e.target === ui.modal) closeModal();
-  });
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && ui.modal.style.display === 'flex') {
-      closeModal();
-    }
-  });
-
-  // --- Copy to Clipboard Logic ---
+  ui.modal.addEventListener('click', (e) => { if (e.target === ui.modal) closeModal(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && ui.modal.style.display === 'flex') closeModal(); });
 
   async function copyToClipboard(text, button) {
     const originalText = button.textContent;
     try {
-      if (!navigator.clipboard) {
-        throw new Error("Clipboard API not available.");
-      }
+      if (!navigator.clipboard) throw new Error("Clipboard API not available.");
       await navigator.clipboard.writeText(text);
       button.textContent = 'Copied!';
     } catch (err) {
-      // Fallback for non-secure contexts (e.g., http) or older browsers
       try {
         const ta = document.createElement('textarea');
-        ta.value = text;
-        ta.style.position = 'absolute';
-        ta.style.left = '-9999px';
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand('copy');
-        ta.remove();
+        ta.value = text; ta.style.position='absolute'; ta.style.left='-9999px';
+        document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove();
         button.textContent = 'Copied!';
       } catch (fallbackErr) {
         button.textContent = 'Failed!';
-        console.error("Failed to copy to clipboard:", fallbackErr);
+        console.error("Failed to copy:", fallbackErr);
       }
     } finally {
-      setTimeout(() => {
-        button.textContent = originalText;
-      }, 1500);
+      setTimeout(() => { button.textContent = originalText; }, 1500);
     }
   }
+  ui.btnCopyCdn.addEventListener('click', () => copyToClipboard(ui.cdnCode.textContent, ui.btnCopyCdn));
+  ui.btnCopyExample.addEventListener('click', () => copyToClipboard(ui.exampleCode.textContent, ui.btnCopyExample));
 
-  ui.btnCopyCdn.addEventListener('click', () => {
-    copyToClipboard(ui.cdnCode.textContent, ui.btnCopyCdn);
-  });
-  
-  ui.btnCopyExample.addEventListener('click', () => {
-    copyToClipboard(ui.exampleCode.textContent, ui.btnCopyExample);
-  });
-
-  // Initial render on page load
+  // Initial
   applyPreview();
 });
 </script>
-
 </body>
 </html>
